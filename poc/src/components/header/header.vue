@@ -5,10 +5,10 @@
     </div>
     <nav>
       <ul>
-        <li >
+        <li  v-if="!auth">
           <router-link to="/signin">Sign In</router-link>
         </li>
-        <li >
+        <li  v-if="auth">
           <button class="logout" @click="Logout()">Logout</button>
         </li>
       </ul>
@@ -24,7 +24,7 @@ export default class Header extends Vue {
     return this.$store.getters.isAuthenticated;
   }
   Logout() {
-    //this.$store.dispatch('logout');
+    this.$store.dispatch('logout');
   }
   }
 </script>
