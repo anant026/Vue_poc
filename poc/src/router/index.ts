@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
-import Signin from '../components/auth/signin.vue';
+import Signin from '../components/auth/signin.vue'
+import Update from '../components/extra/update.vue'
+import Create from '../components/extra/create.vue'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -9,7 +12,13 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,beforeEnter(to,from,next){
+      if(!store.state.user){
+        next()
+      }else {
+        next('/about')
+      }
+    }
   },
   {
     path: '/about',
@@ -18,8 +27,28 @@ Vue.use(VueRouter)
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
+    ,beforeEnter(to,from,next){
+      if(store.state.user){
+        next()
+      }else {
+        next('/signin')
+      }
+    }},
   { path: '/signin', component: Signin },
+  { path: '/create', component: Create,beforeEnter(to,from,next){
+    if(store.state.user){
+      next()
+    }else {
+      next('/signin')
+    }
+  } },
+  { path: '/update/:id', component: Update ,beforeEnter(to,from,next){
+    if(store.state.user){
+      next()
+    }else {
+      next('/signin')
+    }
+  }},
 ]
 
 const router = new VueRouter({
